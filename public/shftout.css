@@ -1,0 +1,141 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Open Sans', 'Raleway', sans-serif;
+}
+
+body {
+    background-color: #4d4d4d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    background-color: #2b2b2b;
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+}
+
+.left-section {
+    background-color: #999999;
+    padding: 40px;
+    color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.left-section .logo img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.left-section h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.left-section p {
+    font-size: 16px;
+}
+
+.right-section {
+    background-color: #1e1e1e;
+    padding: 40px;
+    color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-section h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+form input,
+form select {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #333333;
+    color: #ffffff;
+}
+
+form input::placeholder {
+    color:  #1e1e1e; /* Light white placeholder */
+}
+
+form select::placeholder {
+    background-color: #1e1e1e; /* Light white placeholder for select */
+}
+
+form select {
+    background-color: #333333;
+    color: #ffffff;
+    appearance: none; /* Remove default browser arrow */
+}
+
+form select option {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+form select option[disabled] {
+    color: rgba(255, 255, 255, 0.8); /* Placeholder should be light white */
+}
+
+button {
+    padding: 10px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #008ecc;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-section, .right-section {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .right-section form {
+        width: 100%;
+    }
+}

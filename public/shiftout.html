@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift In & Out - Coal Mining</title>
+    <!-- Link to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shftout.css">
+    <link rel="stylesheet" href="shtin.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+    <!-- Navigation to switch between Shift In and Shift Out -->
+    <div class="nav">
+        <button onclick="showShiftIn()">Shift In</button>
+        <button onclick="showShiftOut()">Shift Out</button>
+    </div>
+
+    <!-- Shift In Section -->
+    <div class="container" id="shiftInContainer" style="display:none;">
+        <!-- Left section with logo and text -->
+        <div class="left-section">
+            <div class="logo">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAiJJREFUSEvF1s/rDlEUx/HXV5FCkQVW5Ed+/gFs/NrIUkhIEmUjWbFRbCwkWbCwwM6vFDtJEkn8AbLACgtWhCKEOd9mvk3zzDzPnfk++t566pmZc877nnvPveczYoLGyARxdQEvw0rMwwx8xHs8x5fURFLB03AUu7C4IfgvPMAF3B00gRTw7iyzs5gzKFjp+z0cxNsmn37gKbiEPS2AZdNP2ILHdf5N4IDex7qO0MLtD7bjdjVOHTje3cwd+nFP4wdWY1Mfw59Yn9k8K9vUgXfiWkKms/A5+x3BuQH2b7JkluN3YVcFT8JrLBwyOMLtx5UmcBRDz340TKJNxhHiFZY2gW9gR0K2YdIWHD5x8byMP9Wl/orp/xEcl9CZKngm4uyljiLjbThU47QA8yvvL2fX64EqeEm+D23BTfYncaLy8VF2oWyoghchyj51FBm3AT/B2ip4Kr6nUvG0fC4Tl/p63mh6iutDy2bQYp6jpqeyyR6vq+o44PvaRmthvybv2z0Zb07ppS1AZdNokWNVXj3H8fwCKzoG7+d2GOcLg7omEefy1pDB73LlEp1qdDT146tF9Q1hAgGLvh6abGw0gSdnfTbky8Zxgv/md3/PCg6SPhfHUeXRq7dmF8bDusmniL29udib3SL7O7lA6CT2ypzQz8cQ6qRJJMRehryNyo1t6jtSMq4GWIUQ9XNLgj6qNjTVt0HAQVWd6t/ZrkvGnWFlx3/FKFofDExSYgAAAABJRU5ErkJggg=="/>
+            </div>
+            <h2>SHIFT IN</h2>
+            <p> @ Powered by coalmitra</p>
+        </div>
+
+        <!-- Right section with form -->
+        <div class="right-section">
+            <h3>ENTER THE DETAILS HERE</h3>
+            <form id="shiftInForm">
+                <label for="full-name">Full name</label>
+                <input type="text" id="full-name" name="full-name" placeholder="Full name">
+
+                <label for="shifttime">Select Shift Time:</label>
+                <select id="shifttime" name="shifttime">
+                    <option value="" disabled selected hidden>Select shift time</option>
+                    <option value="6AM-2PM">6AM - 2PM</option>
+                    <option value="2PM-10PM">2PM - 10PM</option>
+                    <option value="10PM-6AM">10PM - 6AM</option>
+                </select>
+
+                <label for="sector">Select the sector:</label>
+                <select id="sector" name="sector">
+                    <option value="" disabled selected hidden>Select sector</option>
+                    <option value="sector1">North-East</option>
+                    <option value="sector2">North-West</option>
+                    <option value="sector3">South-East</option>
+                    <option value="sector4">South-West</option>
+                </select>
+
+                <label for="setno">Select the setno:</label>
+                <select id="setno" name="setno">
+                    <option value="" disabled selected hidden>Select setno</option>
+                    <option value="setno1">Setno 1</option>
+                    <option value="setno2">Setno 2</option>
+                    <option value="setno3">Setno 3</option>
+                </select>
+
+                <label for="machine">Select the machine:</label>
+                <select id="machine" name="machine">
+                    <option value="" disabled selected hidden>Select machine</option>
+                    <option value="dragline">Dragline</option>
+                    <option value="shovel">Shovel</option>
+                    <option value="dumper">Dumper</option>
+                    <option value="dozer">Dozer</option>
+                    <option value="drill">Drill</option>
+                </select>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shift Out Section -->
+    <div class="container" id="shiftOutContainer">
+        <!-- Left section with logo and text -->
+        <div class="left-section">
+            <div class="logo">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAiJJREFUSEvF1s/rDlEUx/HXV5FCkQVW5Ed+/gFs/NrIUkhIEmUjWbFRbCwkWbCwwM6vFDtJEkn8AbLACgtWhCKEOd9mvk3zzDzPnfk++t566pmZc877nnvPveczYoLGyARxdQEvw0rMwwx8xHs8x5fURFLB03AUu7C4IfgvPMAF3B00gRTw7iyzs5gzKFjp+z0cxNsmn37gKbiEPS2AZdNP2ILHdf5N4IDex7qO0MLtD7bjdjVOHTje3cwd+nFP4wdWY1Mfw59Yn9k8K9vUgXfiWkKms/A5+x3BuQH2b7JkluN3YVcFT8JrLBwyOMLtx5UmcBRDz340TKJNxhHiFZY2gW9gR0K2YdIWHD5x8byMP9Wl/orp/xEcl9CZKngm4uyljiLjbThU47QA8yvvL2fX64EqeEm+D23BTfYncaLy8VF2oWyoghchyj51FBm3AT/B2ip4Kr6nUvG0fC4Tl/p63mh6iutDy2bQYp6jpqeyyR6vq+o44PvaRmthvybv2z0Zb07ppS1AZdNokWNVXj3H8fwCKzoG7+d2GOcLg7omEefy1pDB73LlEp1qdDT146tF9Q1hAgGLvh6abGw0gSdnfTbky8Zxgv/md3/PCg6SPhfHUeXRq7dmF8bDusmniL29udib3SL7O7lA6CT2ypzQz8cQ6qRJJMRehryNyo1t6jtSMq4GWIUQ9XNLgj6qNjTVt0HAQVWd6t/ZrkvGnWFlx3/FKFofDExSYgAAAABJRU5ErkJggg=="/>
+            </div>
+            <h2>SHIFT OUT</h2>
+            <p> @ Powered by coalmitra</p>
+        </div>
+
+        <!-- Right section with form -->
+        <div class="right-section">
+            <h3>ENTER THE DETAILS HERE</h3>
+            <form id="shiftOutForm" action="/submit-shift-out" method="POST">
+                <label for="full-name">Full name</label>
+                <input type="text" id="full-name" name="fullName" placeholder="Full name" required>
+
+                <label for="shifttime">Select Shift Time:</label>
+                <select id="shifttime" name="shiftTime" required>
+                    <option value="" disabled selected hidden>Select shift time</option>
+                    <option value="6AM-2PM">6AM - 2PM</option>
+                    <option value="2PM-10PM">2PM - 10PM</option>
+                    <option value="10PM-6AM">10PM - 6AM</option>
+                </select>
+
+                <label for="sector">Select the sector:</label>
+                <select id="sector" name="sector" required>
+                    <option value="" disabled selected hidden>Select sector</option>
+                    <option value="sector1">North-East</option>
+                    <option value="sector2">North-West</option>
+                    <option value="sector3">South-East</option>
+                    <option value="sector4">South-West</option>
+                </select>
+
+                <label for="setno">Select the setno:</label>
+                <select id="setno" name="setNo" required>
+                    <option value="" disabled selected hidden>Select setno</option>
+                    <option value="setno1">Setno 1</option>
+                    <option value="setno2">Setno 2</option>
+                    <option value="setno3">Setno 3</option>
+                </select>
+
+                <label for="machine">Select the machine:</label>
+                <select id="machine" name="machine" required>
+                    <option value="" disabled selected hidden>Select machine</option>
+                    <option value="dragline">Dragline</option>
+                    <option value="shovel">Shovel</option>
+                    <option value="dumper">Dumper</option>
+                    <option value="dozer">Dozer</option>
+                    <option value="drill">Drill</option>
+                </select>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+
+    <script>
+        function showShiftIn() {
+            document.getElementById("shiftInContainer").style.display = "flex";
+            document.getElementById("shiftOutContainer").style.display = "none";
+        }
+
+        function showShiftOut() {
+            document.getElementById("shiftOutContainer").style.display = "flex";
+            document.getElementById("shiftInContainer").style.display = "none";
+        }
+
+        // Default to Shift Out section
+        document.getElementById("shiftOutContainer").style.display = "flex";
+    </script>
+</body>
+
+</html>
