@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hazard Mitigation Report</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Status Report on Progress into Mitigation of Identified Principal Hazards</h2>
+        <form>
+            <table>
+                <tr>
+                    <td>1.0 Name of the Mine:</td>
+                    <td><input type="text" name="mineName"></td>
+                </tr>
+                <tr>
+                    <td>2.0 Name of the Owner:</td>
+                    <td><input type="text" name="ownerName"></td>
+                </tr>
+                <tr>
+                    <td>3.0 Name of the Agent:</td>
+                    <td><input type="text" name="agentName"></td>
+                </tr>
+                <tr>
+                    <td>4.0 Name of the Manager:</td>
+                    <td><input type="text" name="managerName"></td>
+                </tr>
+                <tr>
+                    <td>5.0 Status report for the quarter ending on:</td>
+                    <td><input type="date" name="quarterEndDate"></td>
+                </tr>
+            </table>
+
+            <h3>Details of Principal Hazards</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>List of Principal Hazards identified</th>
+                        <th>Mitigation date as per formulated SMP</th>
+                        <th>Details of auditable work plans made for mitigation</th>
+                        <th>Actual date of completion as per workplan</th>
+                        <th>Remarks, if any</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" name="hazard1"></td>
+                        <td><input type="date" name="mitigationDate1"></td>
+                        <td><input type="text" name="workPlan1"></td>
+                        <td><input type="date" name="completionDate1"></td>
+                        <td><input type="text" name="remarks1"></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><input type="text" name="hazard2"></td>
+                        <td><input type="date" name="mitigationDate2"></td>
+                        <td><input type="text" name="workPlan2"></td>
+                        <td><input type="date" name="completionDate2"></td>
+                        <td><input type="text" name="remarks2"></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><input type="text" name="hazard3"></td>
+                        <td><input type="date" name="mitigationDate3"></td>
+                        <td><input type="text" name="workPlan3"></td>
+                        <td><input type="date" name="completionDate3"></td>
+                        <td><input type="text" name="remarks3"></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><input type="text" name="hazard4"></td>
+                        <td><input type="date" name="mitigationDate4"></td>
+                        <td><input type="text" name="workPlan4"></td>
+                        <td><input type="date" name="completionDate4"></td>
+                        <td><input type="text" name="remarks4"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Other Safety Considerations</h3>
+            <table>
+                <tr>
+                    <td> Important safety works under execution requiring attention of the manager:</td>
+                    <td><textarea name="safetyWorks" rows="3"></textarea></td>
+                </tr>
+                <tr>
+                    <td> Other important matters from the point of view of safety required to be attended to by the income manager:</td>
+                    <td><textarea name="safetyMatters" rows="3"></textarea></td>
+                </tr>
+            </table>
+
+            <div class="signature-section">
+                <div>
+                    <p>Signature with date of the Manager</p>
+                </div>
+                <div>
+                    <p>Signature with date of the Agent</p>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
