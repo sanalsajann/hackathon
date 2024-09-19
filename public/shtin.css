@@ -87,7 +87,7 @@ form select {
 }
 
 form input::placeholder {
-    color:  #1e1e1e; /* Light white placeholder */
+    color:  rgba(255, 255, 255, 0.8); /* Light white placeholder */
 }
 
 form select::placeholder {
