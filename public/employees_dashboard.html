@@ -1,26 +1,77 @@
-<table id="example" class="table table-striped table-bordered" style="width:100%">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
     <link rel="stylesheet" href="employee_dashboard.css">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>ID</th>
-            <th>Machine Used</th>
-            <th>Shift in</th>
-            <th>Shift Out</th>
-            <th>Amount of Coal Collected</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Helen Susan</td>
-            <td>101002</td>
-            <td>Hammer</td>
-            <td>6:00 am</td>
-            <td>2:00 pm</td>
-            <td>20kg</td>
-        </tr>
-    </tbody>
-    <div class="button-container"></div>
-        <a href="dashboard.html" class="back-button">Back to Dashboard</a>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="wrapper">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Machine Used</th>
+                    <th>Shift In</th>
+                    <th>Shift Out</th>
+                    <th>Amount of Coal Collected</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Employee rows will be populated here -->
+            </tbody>
+        </table>
+        <div class="button-container">
+            <a href="dashboard.html" class="back-button">Back to Dashboard</a>
+        </div>
     </div>
-</table>
+
+    <script>
+        async function fetchEmployeeDetails() {
+            // Assume supervisorId is available from session or another source
+            const supervisorId = sessionStorage.getItem('supervisorId');
+
+            if (!supervisorId) {
+                console.error('Supervisor ID not found in session');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/get-employee-details?supervisorId=${supervisorId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    populateTable(data);
+                } else {
+                    console.error('Error fetching employee details:', data.message);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        function populateTable(employees) {
+            const tableBody = document.querySelector('#example tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.fullName}</td>
+                    <td>${employee.machine}</td>
+                    <td>${employee.shiftIn}</td>
+                    <td>${employee.shiftOut}</td>
+                    <td>${employee.kilos}kg</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Call function to fetch and display details when the page loads
+        document.addEventListener('DOMContentLoaded', fetchEmployeeDetails);
+    </script>
+</body>
+</html>

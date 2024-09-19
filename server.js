@@ -185,11 +185,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-
-// Route to get supervisor details
-// Route to get supervisor details
-// Route to get supervisor details
-app.get('/supervisor-details', async (req, res) => {
+// Route to get all employee shift details under a specific supervisor
+app.get('/get-employee-details', async (req, res) => {
     try {
         const supervisorId = req.query.supervisorId;
 
@@ -197,27 +194,34 @@ app.get('/supervisor-details', async (req, res) => {
             return res.status(400).json({ message: 'Supervisor ID is required' });
         }
 
-        console.log(`Fetching supervisor with ID: ${supervisorId}`); // Debug log
+        console.log(`Fetching shift details for supervisor ID: ${supervisorId}`);
 
-        const supervisor = await Supervisor.findOne({ employeeid: supervisorId });
+        // Fetch all shift details for the given supervisor
+        const shifts = await Shift.find({ supervisor_id: supervisorId });
 
-        if (supervisor) {
-            console.log('Supervisor found:', supervisor); // Debug log
-            res.status(200).json({
-                id: supervisor.employeeid,
-                name: supervisor.username
-            });
-        } else {
-            console.log('Supervisor not found'); // Debug log
-            res.status(404).json({ message: 'Supervisor not found' });
+        if (!shifts.length) {
+            return res.status(404).json({ message: 'No shift details found for this supervisor' });
         }
+
+        // Fetch shift-out details for each shift
+        const shiftDetails = await Promise.all(shifts.map(async (shift) => {
+            const shiftOut = await ShiftOut.findOne({ fullName: shift.fullName, shiftTime: shift.shiftTime });
+            return {
+                id: shift.fullName, // Assuming fullName as ID here; adjust if necessary
+                fullName: shift.fullName,
+                machine: shift.machine,
+                shiftIn: shift.shiftTime,
+                shiftOut: shiftOut ? shiftOut.shiftTime : 'N/A',
+                kilos: shiftOut ? shiftOut.kilos : 'N/A'
+            };
+        }));
+
+        res.status(200).json(shiftDetails);
     } catch (err) {
-        console.error('Error fetching supervisor details:', err);
+        console.error('Error fetching employee details:', err);
         res.status(500).json({ message: 'Server error' });
     }
 });
-
-
 
 // Start the server
 app.listen(port, () => {
