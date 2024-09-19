@@ -29,23 +29,21 @@ const shiftSchema = new mongoose.Schema({
     sector: String,
     setNo: String,
     machine: String,
-   supervisor_id:String,
+    supervisor_id: String,
 });
 
 // Create a model for shifts (Shift In)
 const Shift = mongoose.model('Shift', shiftSchema);
 
 // Define a separate schema for Shift Out
-// Define a separate schema for Shift Out (including supid and kilos)
 const shiftOutSchema = new mongoose.Schema({
     fullName: String,
     shiftTime: String,
     sector: String,
     setNo: String,
     machine: String,
-    kilos: Number          // Add kilos for amount of coal collected
+    kilos: Number // Add kilos for amount of coal collected
 });
-
 
 // Create a model for Shift Out
 const ShiftOut = mongoose.model('ShiftOut', shiftOutSchema);
@@ -63,10 +61,17 @@ const Supervisor = mongoose.model('Supervisor', userSchema);
 // Serve static files (like your HTML, CSS, and JavaScript files)
 app.use(express.static('public'));
 
+// Middleware to simulate user identification (e.g., from session or token)
+app.use((req, res, next) => {
+    // Simulate logged-in supervisor ID
+    req.loggedInSupervisorId = '12345'; // Replace with actual logic
+    next();
+});
+
 // Route to handle Shift In submission
 app.post('/submit-shift', async (req, res) => {
     try {
-        console.log('Received Shift In data:', req.body);  // Add this line
+        console.log('Received Shift In data:', req.body); // Add this line
         // Create a new shift document from the request body (Shift In)
         const newShift = new Shift({
             fullName: req.body.fullName,
@@ -88,8 +93,6 @@ app.post('/submit-shift', async (req, res) => {
     }
 });
 
-
-
 // Route to handle Shift Out submission
 app.post('/submit-shift-out', async (req, res) => {
     try {
@@ -102,7 +105,7 @@ app.post('/submit-shift-out', async (req, res) => {
             sector: sector,
             setNo: setNo,
             machine: machine,
-            kilos: kilos       // Add kilos
+            kilos: kilos // Add kilos
         });
 
         // Save the new ShiftOut document to MongoDB
@@ -114,7 +117,6 @@ app.post('/submit-shift-out', async (req, res) => {
         res.status(500).json({ message: 'Error saving shift out' });
     }
 });
-
 
 // Register route
 app.post('/register', async (req, res) => {
@@ -167,7 +169,7 @@ app.post('/login', async (req, res) => {
             if (passwordMatch) {
                 console.log(`User authentication successful: ${user.username}`);
                 // Redirect based on user type
-                const redirectUrl = userType === 'supervisor' ? 'supervisor-home.html' : 'employee-home.html';
+                const redirectUrl = userType === 'supervisor' ? 'dashboard.html' : 'homepage.html';
                 res.json({ success: true, redirectUrl });
             } else {
                 console.log('Invalid password');
@@ -182,6 +184,40 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
+
+// Route to get supervisor details
+// Route to get supervisor details
+// Route to get supervisor details
+app.get('/supervisor-details', async (req, res) => {
+    try {
+        const supervisorId = req.query.supervisorId;
+
+        if (!supervisorId) {
+            return res.status(400).json({ message: 'Supervisor ID is required' });
+        }
+
+        console.log(`Fetching supervisor with ID: ${supervisorId}`); // Debug log
+
+        const supervisor = await Supervisor.findOne({ employeeid: supervisorId });
+
+        if (supervisor) {
+            console.log('Supervisor found:', supervisor); // Debug log
+            res.status(200).json({
+                id: supervisor.employeeid,
+                name: supervisor.username
+            });
+        } else {
+            console.log('Supervisor not found'); // Debug log
+            res.status(404).json({ message: 'Supervisor not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching supervisor details:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
 
 // Start the server
 app.listen(port, () => {

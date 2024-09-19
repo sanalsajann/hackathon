@@ -126,6 +126,31 @@ button {
 button:hover {
     background-color: #008ecc;
 }
+.container {
+    padding: 10px;
+    background-color: #2b2b2b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+/* Corrected styling for the back button */
+.back-button {
+    padding: 10px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none; /* Ensure the text looks like a button */
+}
+
+.back-button:hover {
+    background-color: #008ecc;
+}
+
 
 /* Responsive styling */
 @media (max-width: 768px) {

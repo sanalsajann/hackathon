@@ -13,7 +13,6 @@
             <ul class="nav-links">
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="employees_dashboard.html">Employees</a></li>
-              <!--  <li><a href="#">Sectors</a></li> -->
                 <li><a href="machine_dashboard.html">Machines</a></li>
                 <li><a href="circulars_dashboard.html">Circulars</a></li>
             </ul>
@@ -22,13 +21,13 @@
         <main class="main-content">
             <header>
                 <h1>Dashboard</h1>
-                <div class="user">Supervisor</div>
+                <div class="user" id="user-type">Supervisor</div>
             </header>
             <section class="cards">
                 <div class="card blue">
                     <h3>Supervisor Details</h3>
-                    <p>Supervisor ID: 12345</p>
-                    <p>Supervisor Name: Aadit Renjith</p>
+                    <p id="supervisor-id">Supervisor ID: Loading...</p>
+                    <p id="supervisor-name">Supervisor Name: Loading...</p>
                     <p>Sector: North-East</p>
                     <p>Set No:Set 1</p>
                 </div>
@@ -68,5 +67,36 @@
             </section>
         </main>
     </div>
+
+    <script>
+        // Function to get supervisor details
+        async function getSupervisorDetails() {
+            try {
+                const supervisorId = sessionStorage.getItem('supervisorId');
+                
+                if (!supervisorId) {
+                    document.getElementById('supervisor-id').innerText = `Supervisor ID: Not found`;
+                    document.getElementById('supervisor-name').innerText = `Supervisor Name: Not found`;
+                    return;
+                }
+
+                const response = await fetch(`/supervisor-details?supervisorId=${supervisorId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('supervisor-id').innerText = `Supervisor ID: ${data.id}`;
+                    document.getElementById('supervisor-name').innerText = `Supervisor Name: ${data.name}`;
+                } else {
+                    document.getElementById('supervisor-id').innerText = `Supervisor ID: Not found`;
+                    document.getElementById('supervisor-name').innerText = `Supervisor Name: Not found`;
+                }
+            } catch (error) {
+                console.error('Error fetching supervisor details:', error);
+            }
+        }
+
+        // Fetch supervisor details on page load
+        getSupervisorDetails();
+    </script>
 </body>
 </html>

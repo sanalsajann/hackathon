@@ -22,7 +22,20 @@ body {
     max-width: 900px;
     width: 100%;
 }
+.back-button {
+    padding: 10px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none; /* Ensure the text looks like a button */
+}
 
+.back-button:hover {
+    background-color: #008ecc;
+}
 .left-section {
     background-color: #999999;
     padding: 40px;

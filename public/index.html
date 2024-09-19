@@ -44,7 +44,7 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent form from submitting traditionally
 
             const username = document.getElementById('username').value;
@@ -55,27 +55,32 @@
 
             console.log(`Submitting login form with Username: ${username}, Employee ID: ${employeeid}, User Type: ${userType}`);
 
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password, employeeid, userType }),
-            })
-            .then(response => response.json())
-            .then(data => {
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password, employeeid, userType }),
+                });
+
+                const data = await response.json();
+                
                 if (data.success) {
-                    window.location.href = userType === 'supervisor' ? 'dashboard.html' : 'homepage.html';
+                    if (userType === 'supervisor') {
+                        // Store the supervisor ID in session storage for later use
+                        sessionStorage.setItem('supervisorId', employeeid);
+                    }
+                    window.location.href = data.redirectUrl;
                 } else {
                     errorMessage.textContent = data.message;
                     errorMessage.style.color = 'red';
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error:', error);
                 errorMessage.textContent = 'An error occurred';
                 errorMessage.style.color = 'red';
-            });
+            }
         });
     </script>
 </body>
