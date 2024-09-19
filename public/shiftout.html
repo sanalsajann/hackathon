@@ -148,20 +148,75 @@
     </div>
     
 
-    <script>
+    <<script>
         function showShiftIn() {
             document.getElementById("shiftInContainer").style.display = "flex";
             document.getElementById("shiftOutContainer").style.display = "none";
         }
-
+    
         function showShiftOut() {
             document.getElementById("shiftOutContainer").style.display = "flex";
             document.getElementById("shiftInContainer").style.display = "none";
         }
-
+    
         // Default to Shift Out section
         document.getElementById("shiftOutContainer").style.display = "flex";
+    
+        // Handle Shift In form submission
+        document.getElementById('shiftInForm').addEventListener('submit', async function (e) {
+            e.preventDefault();  // Prevent the default form submission
+    
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+    
+            try {
+                const response = await fetch('/submit-shift-in', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+    
+                if (response.ok) {
+                    // Redirect to index.html after successful form submission
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Error submitting data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    
+        // Handle Shift Out form submission
+        document.getElementById('shiftOutForm').addEventListener('submit', async function (e) {
+            e.preventDefault();  // Prevent the default form submission
+    
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+    
+            try {
+                const response = await fetch('/submit-shift-out', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+    
+                if (response.ok) {
+                    // Redirect to index.html after successful form submission
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Error submitting data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
     </script>
+    
 </body>
 
 </html>

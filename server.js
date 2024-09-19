@@ -29,19 +29,23 @@ const shiftSchema = new mongoose.Schema({
     sector: String,
     setNo: String,
     machine: String,
+   supervisor_id:String,
 });
 
 // Create a model for shifts (Shift In)
 const Shift = mongoose.model('Shift', shiftSchema);
 
 // Define a separate schema for Shift Out
+// Define a separate schema for Shift Out (including supid and kilos)
 const shiftOutSchema = new mongoose.Schema({
     fullName: String,
     shiftTime: String,
     sector: String,
     setNo: String,
     machine: String,
+    kilos: Number          // Add kilos for amount of coal collected
 });
+
 
 // Create a model for Shift Out
 const ShiftOut = mongoose.model('ShiftOut', shiftOutSchema);
@@ -62,6 +66,7 @@ app.use(express.static('public'));
 // Route to handle Shift In submission
 app.post('/submit-shift', async (req, res) => {
     try {
+        console.log('Received Shift In data:', req.body);  // Add this line
         // Create a new shift document from the request body (Shift In)
         const newShift = new Shift({
             fullName: req.body.fullName,
@@ -69,6 +74,7 @@ app.post('/submit-shift', async (req, res) => {
             sector: req.body.sector,
             setNo: req.body.setNo,
             machine: req.body.machine,
+            supervisor_id: req.body.supervisor_id,
         });
 
         // Save the Shift In document to the MongoDB collection
@@ -82,29 +88,33 @@ app.post('/submit-shift', async (req, res) => {
     }
 });
 
+
+
 // Route to handle Shift Out submission
 app.post('/submit-shift-out', async (req, res) => {
     try {
-        const { fullName, shiftTime, sector, setNo, machine } = req.body;
+        const { fullName, shiftTime, sector, setNo, machine, kilos } = req.body;
 
-        // Create a new document with the received data
+        // Create a new ShiftOut document with the received data
         const newShiftOut = new ShiftOut({
-            fullName: req.body.fullName,
-            shiftTime: req.body.shiftTime,
-            sector: req.body.sector,
-            setNo: req.body.setNo,
-            machine: req.body.machine,
+            fullName: fullName,
+            shiftTime: shiftTime,
+            sector: sector,
+            setNo: setNo,
+            machine: machine,
+            kilos: kilos       // Add kilos
         });
 
-        // Save the new document and await the result
+        // Save the new ShiftOut document to MongoDB
         const savedShiftOut = await newShiftOut.save();
         
-       res.status(200).json({ message: 'Shift out details added successfully', data: savedShiftOut });
+        res.status(200).json({ message: 'Shift out details added successfully', data: savedShiftOut });
     } catch (err) {
         console.error('Error saving shift out:', err);
         res.status(500).json({ message: 'Error saving shift out' });
     }
 });
+
 
 // Register route
 app.post('/register', async (req, res) => {

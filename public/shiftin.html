@@ -84,6 +84,7 @@
             const sector = document.getElementById('sector').value;
             const setNo = document.getElementById('setno').value;
             const machine = document.getElementById('machine').value;
+            const supervisor_id = document.getElementById('supervisor_id').value;
 
             // Create a data object to send to the server
             const data = {
@@ -91,7 +92,8 @@
                 shiftTime: shiftTime,
                 sector: sector,
                 setNo: setNo,
-                machine: machine
+                machine: machine,
+                supervisor_id:supervisor_id
             };
 
             // Send data to the server via POST request
