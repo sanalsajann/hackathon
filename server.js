@@ -222,6 +222,35 @@ app.get('/get-employee-details', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+// Route to get supervisor details
+app.get('/supervisor-details', async (req, res) => {
+    try {
+        const supervisorId = req.query.supervisorId;
+
+        if (!supervisorId) {
+            return res.status(400).json({ message: 'Supervisor ID is required' });
+        }
+
+        console.log(`Fetching supervisor with ID: ${supervisorId}`); // Debug log
+
+        const supervisor = await Supervisor.findOne({ employeeid: supervisorId });
+
+        if (supervisor) {
+            console.log('Supervisor found:', supervisor); // Debug log
+            res.status(200).json({
+                id: supervisor.employeeid,
+                name: supervisor.username
+            });
+        } else {
+            console.log('Supervisor not found'); // Debug log
+            res.status(404).json({ message: 'Supervisor not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching supervisor details:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 // Start the server
 app.listen(port, () => {
