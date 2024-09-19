@@ -4,7 +4,10 @@
     box-sizing: border-box;
     font-family: 'Roboto', 'Open Sans', 'Raleway', sans-serif;
 }
-
+nav.button{
+  margin:50px;
+  padding:20px;
+}
 body {
     background-color: #4d4d4d;
     display: flex;
@@ -22,6 +25,7 @@ body {
     max-width: 900px;
     width: 100%;
 }
+
 
 .left-section {
     background-color: #999999;
