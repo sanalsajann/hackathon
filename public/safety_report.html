@@ -9,22 +9,18 @@
 <body>
     <div class="container">
         <h2>Status Report on Progress into Mitigation of Identified Principal Hazards</h2>
-        <form>
+        <form id="hazardForm" onsubmit="submitForm(event)">
             <table>
                 <tr>
-                    <td>1.0 Name of the Mine:</td>
+                    <td>1.0 Name of the Section:</td>
                     <td><input type="text" name="mineName"></td>
                 </tr>
                 <tr>
-                    <td>2.0 Name of the Owner:</td>
+                    <td>2.0 Name of the Supervisor:</td>
                     <td><input type="text" name="ownerName"></td>
                 </tr>
                 <tr>
-                    <td>3.0 Name of the Agent:</td>
-                    <td><input type="text" name="agentName"></td>
-                </tr>
-                <tr>
-                    <td>4.0 Name of the Manager:</td>
+                    <td>4.0 Name of the Sector:</td>
                     <td><input type="text" name="managerName"></td>
                 </tr>
                 <tr>
@@ -39,9 +35,8 @@
                     <tr>
                         <th>No.</th>
                         <th>List of Principal Hazards identified</th>
-                        <th>Mitigation date as per formulated SMP</th>
-                        <th>Details of auditable work plans made for mitigation</th>
-                        <th>Actual date of completion as per workplan</th>
+                        <th>Risk Rating</th>
+                        <th>Control Measures</th>
                         <th>Remarks, if any</th>
                     </tr>
                 </thead>
@@ -49,33 +44,53 @@
                     <tr>
                         <td>1</td>
                         <td><input type="text" name="hazard1"></td>
-                        <td><input type="date" name="mitigationDate1"></td>
-                        <td><input type="text" name="workPlan1"></td>
-                        <td><input type="date" name="completionDate1"></td>
+                        <td>
+                            <select name="riskRating1">
+                                <option value="Severe">Severe</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Mild">Mild</option>
+                            </select>
+                        </td>
+                        <td><input type="text" name="controlMeasures1"></td>
                         <td><input type="text" name="remarks1"></td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td><input type="text" name="hazard2"></td>
-                        <td><input type="date" name="mitigationDate2"></td>
-                        <td><input type="text" name="workPlan2"></td>
-                        <td><input type="date" name="completionDate2"></td>
+                        <td>
+                            <select name="riskRating2">
+                                <option value="Severe">Severe</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Mild">Mild</option>
+                            </select>
+                        </td>
+                        <td><input type="text" name="controlMeasures2"></td>
                         <td><input type="text" name="remarks2"></td>
                     </tr>
                     <tr>
                         <td>3</td>
                         <td><input type="text" name="hazard3"></td>
-                        <td><input type="date" name="mitigationDate3"></td>
-                        <td><input type="text" name="workPlan3"></td>
-                        <td><input type="date" name="completionDate3"></td>
+                        <td>
+                            <select name="riskRating3">
+                                <option value="Severe">Severe</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Mild">Mild</option>
+                            </select>
+                        </td>
+                        <td><input type="text" name="controlMeasures3"></td>
                         <td><input type="text" name="remarks3"></td>
                     </tr>
                     <tr>
                         <td>4</td>
                         <td><input type="text" name="hazard4"></td>
-                        <td><input type="date" name="mitigationDate4"></td>
-                        <td><input type="text" name="workPlan4"></td>
-                        <td><input type="date" name="completionDate4"></td>
+                        <td>
+                            <select name="riskRating4">
+                                <option value="Severe">Severe</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Mild">Mild</option>
+                            </select>
+                        </td>
+                        <td><input type="text" name="controlMeasures4"></td>
                         <td><input type="text" name="remarks4"></td>
                     </tr>
                 </tbody>
@@ -84,28 +99,33 @@
             <h3>Other Safety Considerations</h3>
             <table>
                 <tr>
-                    <td> Important safety works under execution requiring attention of the manager:</td>
+                    <td>Important safety works under execution requiring attention of the manager:</td>
                     <td><textarea name="safetyWorks" rows="3"></textarea></td>
                 </tr>
                 <tr>
-                    <td> Other important matters from the point of view of safety required to be attended to by the income manager:</td>
+                    <td>Other important matters from the point of view of safety required to be attended to by the income manager:</td>
                     <td><textarea name="safetyMatters" rows="3"></textarea></td>
                 </tr>
             </table>
 
-            <div class="signature-section">
-                <div>
-                    <p>Signature with date of the Manager</p>
-                </div>
-                <div>
-                    <p>Signature with date of the Agent</p>
-                </div>
+            <h3>First Aid Facilities Adequacy</h3>
+            <div class="radio-group">
+                <label><input type="radio" name="firstAid" value="Satisfactory"> Satisfactory</label>
+                <label><input type="radio" name="firstAid" value="Needs Check"> Needs Check</label>
+                <label><input type="radio" name="firstAid" value="Excellent"> Excellent</label>
             </div>
+
+            <h3>Environmental and Air Quality Details</h3>
+            <textarea name="environmentalDetails" rows="4"></textarea>
 
             <div class="submit-section">
                 <input type="submit" value="Submit">
             </div>
         </form>
+
+        <div class="results" id="results"></div>
     </div>
+
+    <script src="safety.js"></script>
 </body>
 </html>

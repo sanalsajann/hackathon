@@ -1,11 +1,9 @@
-/* General settings */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
     background-color: #757575; /* Gray background */
     color: #ffffff; /* White text */
 }
-
 .container {
     max-width: 800px;
     margin: auto;
@@ -14,66 +12,75 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h2, h3 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #ffffff; /* White for headings */
+h3 {
+    margin-top: 20px;
+    color:  #ffffff;
+    font-size: 20px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    color: #ffffff; /* White text in table */
 }
 
-table, th, td {
-    border: 1px solid #555555; /* Dark gray for borders */
-}
-
-th, td {
+td, th {
     padding: 10px;
-    text-align: left;
+    border: 1px solid #cccccc;
 }
 
-input[type="text"], input[type="date"], textarea {
+th {
+    background-color: #f5f5f5;
+    color: #333333;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="date"], select, textarea {
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     box-sizing: border-box;
-    background-color: #444444; /* Dark gray input fields */
-    color: #ffffff; /* White text in inputs */
-    border: 1px solid #555555; /* Dark gray border for inputs */
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 textarea {
     resize: vertical;
 }
 
-input[type="submit"] {
-    background-color: #2196F3; /* Blue button */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
+.radio-group {
+    margin-bottom: 20px;
 }
 
-input[type="submit"]:hover {
-    background-color: #1976D2; /* Darker blue on hover */
-}
-
-.signature-section {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    color: #ffffff;
-}
-
-.signature-section div {
-    text-align: center;
-    width: 45%;
+.radio-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
 }
 
 .submit-section {
     text-align: center;
     margin-top: 20px;
+}
+
+input[type="submit"] {
+    padding: 12px 24px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.results {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
 }
