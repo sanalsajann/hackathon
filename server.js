@@ -2,6 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); // For password hashing
+const multer = require('multer'); // For handling multipart/form-data
+const fs = require('fs'); // For reading files
+const path = require('path'); // To resolve paths
+
+// Check if pdfGenerator exists
+let createPDF;
+try {
+    createPDF = require('./pdfGenerator'); // Assuming you have a PDF generator function
+} catch (error) {
+    console.error('Error loading pdfGenerator:', error.message);
+}
+
 const app = express();
 const port = 3000;
 
@@ -57,6 +69,14 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 const Supervisor = mongoose.model('Supervisor', userSchema);
+
+// Define schema for PDF documents
+const pdfSchema = new mongoose.Schema({
+    filename: String,
+    data: Buffer, // You can also use String for Base64
+});
+
+const Pdf = mongoose.model('Pdf', pdfSchema);
 
 // Serve static files (like your HTML, CSS, and JavaScript files)
 app.use(express.static('public'));
@@ -150,7 +170,7 @@ app.post('/login', async (req, res) => {
 
             if (passwordMatch) {
                 // Redirect based on user type
-                const redirectUrl = userType === 'supervisor' ? 'dashboard.html' : 'homepage.html';
+                const redirectUrl = userType === 'supervisor' ? 'dashboard.html' : 'homepage.html'; // Change to index.html for employees
                 res.json({ success: true, redirectUrl });
             } else {
                 res.json({ success: false, message: 'Invalid username, password, or employee ID' });
@@ -255,6 +275,64 @@ app.get('/coal-collected-by-sector', async (req, res) => {
     } catch (err) {
         console.error('Error fetching coal collected data:', err);
         res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Route to generate and save PDF
+// Route to generate and save PDF
+app.post('/submit-hazard-report', async (req, res) => {
+    try {
+        // Check if createPDF function is defined
+        if (!createPDF) {
+            return res.status(500).json({ message: 'PDF generator not available' });
+        }
+
+        // Create PDF (assuming createPDF is a function that generates a PDF and saves it to a path)
+        const pdfPath = await createPDF(req.body); // Make sure createPDF returns the file path
+        console.log('Generated PDF path:', pdfPath); // Log the PDF path
+
+        if (!pdfPath || !fs.existsSync(pdfPath)) {
+            return res.status(500).json({ message: 'Failed to generate PDF or PDF not found' });
+        }
+
+        // Read the PDF file as a buffer
+        const pdfBuffer = fs.readFileSync(pdfPath);
+
+        // Create a new PDF document
+        const newPdf = new Pdf({
+            filename: path.basename(pdfPath), // Use the file name from the path
+            data: pdfBuffer,
+        });
+
+        // Save the PDF document to the database
+        await newPdf.save();
+        console.log('PDF saved successfully:', newPdf);
+
+        // Respond to the client
+        res.status(200).json({ message: 'PDF generated and stored successfully!' });
+    } catch (error) {
+        console.error('Error generating or saving PDF:', error);
+        res.status(500).json({ message: 'Error saving PDF', error: error.message });
+    }
+});
+
+
+// Route to download a PDF by ID
+app.get('/download-pdf/:id', async (req, res) => {
+    try {
+        const pdfId = req.params.id;
+        const pdfDocument = await Pdf.findById(pdfId);
+
+        if (!pdfDocument) {
+            return res.status(404).json({ message: 'PDF not found' });
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=${pdfDocument.filename}`);
+        res.send(pdfDocument.data); // Send the binary data
+    } catch (error) {
+        console.error('Error fetching PDF:', error);
+        res.status(500).json({ message: 'Error fetching PDF' });
     }
 });
 

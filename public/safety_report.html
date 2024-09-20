@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hazard Mitigation Report</title>
     <link rel="stylesheet" href="safety_report.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -13,19 +14,19 @@
             <table>
                 <tr>
                     <td>1.0 Name of the Section:</td>
-                    <td><input type="text" name="mineName"></td>
+                    <td><input type="text" name="mineName" required></td>
                 </tr>
                 <tr>
                     <td>2.0 Name of the Supervisor:</td>
-                    <td><input type="text" name="ownerName"></td>
+                    <td><input type="text" name="ownerName" required></td>
                 </tr>
                 <tr>
                     <td>4.0 Name of the Sector:</td>
-                    <td><input type="text" name="managerName"></td>
+                    <td><input type="text" name="managerName" required></td>
                 </tr>
                 <tr>
                     <td>5.0 Status report for the quarter ending on:</td>
-                    <td><input type="date" name="quarterEndDate"></td>
+                    <td><input type="date" name="quarterEndDate" required></td>
                 </tr>
             </table>
 
@@ -43,15 +44,15 @@
                 <tbody>
                     <tr>
                         <td>1</td>
-                        <td><input type="text" name="hazard1"></td>
+                        <td><input type="text" name="hazard1" required></td>
                         <td>
-                            <select name="riskRating1">
+                            <select name="riskRating1" required>
                                 <option value="Severe">Severe</option>
                                 <option value="Moderate">Moderate</option>
                                 <option value="Mild">Mild</option>
                             </select>
                         </td>
-                        <td><input type="text" name="controlMeasures1"></td>
+                        <td><input type="text" name="controlMeasures1" required></td>
                         <td><input type="text" name="remarks1"></td>
                     </tr>
                     <tr>
@@ -110,7 +111,7 @@
 
             <h3>First Aid Facilities Adequacy</h3>
             <div class="radio-group">
-                <label><input type="radio" name="firstAid" value="Satisfactory"> Satisfactory</label>
+                <label><input type="radio" name="firstAid" value="Satisfactory" required> Satisfactory</label>
                 <label><input type="radio" name="firstAid" value="Needs Check"> Needs Check</label>
                 <label><input type="radio" name="firstAid" value="Excellent"> Excellent</label>
             </div>
@@ -127,5 +128,67 @@
     </div>
 
     <script src="safety.js"></script>
+    <script>
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const formData = new FormData(document.getElementById('hazardForm'));
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Create PDF
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            pdf.text("Hazard Mitigation Report", 10, 10);
+            pdf.text(`1. Section Name: ${data.mineName}`, 10, 20);
+            pdf.text(`2. Supervisor Name: ${data.ownerName}`, 10, 30);
+            pdf.text(`3. Sector Name: ${data.managerName}`, 10, 40);
+            pdf.text(`4. Quarter End Date: ${data.quarterEndDate}`, 10, 50);
+            
+            // Add Principal Hazards details
+            for (let i = 1; i <= 4; i++) {
+                if (data[`hazard${i}`]) {
+                    pdf.text(`Hazard ${i}: ${data[`hazard${i}`]}`, 10, 60 + (i * 10));
+                    pdf.text(`Risk Rating: ${data[`riskRating${i}`]}`, 10, 70 + (i * 10));
+                    pdf.text(`Control Measures: ${data[`controlMeasures${i}`]}`, 10, 80 + (i * 10));
+                    pdf.text(`Remarks: ${data[`remarks${i}`]}`, 10, 90 + (i * 10));
+                }
+            }
+
+            pdf.text(`Safety Works: ${data.safetyWorks}`, 10, 120);
+            pdf.text(`Safety Matters: ${data.safetyMatters}`, 10, 130);
+            pdf.text(`First Aid: ${data.firstAid}`, 10, 140);
+            pdf.text(`Environmental Details: ${data.environmentalDetails}`, 10, 150);
+
+            // Convert PDF to Blob and send to server
+            const pdfBlob = pdf.output('blob');
+
+            const formDataForUpload = new FormData();
+            formDataForUpload.append('file', pdfBlob, 'hazard_mitigation_report.pdf');
+
+            try {
+                const response = await fetch('/upload-pdf', {
+                    method: 'POST',
+                    body: formDataForUpload,
+                });
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('results').innerText = 'PDF uploaded successfully!';
+                } else {
+                    document.getElementById('results').innerText = 'Error uploading PDF.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerText = 'Error uploading PDF.';
+            }
+
+            // Save the PDF locally
+            pdf.save('hazard_mitigation_report.pdf');
+        }
+    </script>
 </body>
 </html>
