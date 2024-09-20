@@ -71,16 +71,10 @@ app.use((req, res, next) => {
 // Route to handle Shift In submission
 app.post('/submit-shift', async (req, res) => {
     try {
-        console.log('Received Shift In data:', req.body); // Add this line
+        console.log('Received Shift In data:', req.body);
+        
         // Create a new shift document from the request body (Shift In)
-        const newShift = new Shift({
-            fullName: req.body.fullName,
-            shiftTime: req.body.shiftTime,
-            sector: req.body.sector,
-            setNo: req.body.setNo,
-            machine: req.body.machine,
-            supervisor_id: req.body.supervisor_id,
-        });
+        const newShift = new Shift(req.body);
 
         // Save the Shift In document to the MongoDB collection
         await newShift.save();
@@ -96,17 +90,7 @@ app.post('/submit-shift', async (req, res) => {
 // Route to handle Shift Out submission
 app.post('/submit-shift-out', async (req, res) => {
     try {
-        const { fullName, shiftTime, sector, setNo, machine, kilos } = req.body;
-
-        // Create a new ShiftOut document with the received data
-        const newShiftOut = new ShiftOut({
-            fullName: fullName,
-            shiftTime: shiftTime,
-            sector: sector,
-            setNo: setNo,
-            machine: machine,
-            kilos: kilos // Add kilos
-        });
+        const newShiftOut = new ShiftOut(req.body); // Directly use req.body
 
         // Save the new ShiftOut document to MongoDB
         const savedShiftOut = await newShiftOut.save();
@@ -153,7 +137,7 @@ app.post('/login', async (req, res) => {
     try {
         const { username, password, employeeid, userType } = req.body;
 
-        console.log(`Received login attempt with Username: ${username}, Password: ${password}, Employee ID: ${employeeid}`);
+        console.log(`Received login attempt with Username: ${username}, Employee ID: ${employeeid}`);
 
         let Model = userType === 'supervisor' ? Supervisor : User;
 
@@ -161,22 +145,17 @@ app.post('/login', async (req, res) => {
         const user = await Model.findOne({ username, employeeid });
 
         if (user) {
-            console.log(`User found in database: ${user.username}`);
-
             // Compare the provided password with the stored hashed password
             const passwordMatch = await bcrypt.compare(password, user.password);
 
             if (passwordMatch) {
-                console.log(`User authentication successful: ${user.username}`);
                 // Redirect based on user type
                 const redirectUrl = userType === 'supervisor' ? 'dashboard.html' : 'homepage.html';
                 res.json({ success: true, redirectUrl });
             } else {
-                console.log('Invalid password');
                 res.json({ success: false, message: 'Invalid username, password, or employee ID' });
             }
         } else {
-            console.log('No matching user found');
             res.json({ success: false, message: 'Invalid username, password, or employee ID' });
         }
     } catch (err) {
@@ -203,16 +182,16 @@ app.get('/get-employee-details', async (req, res) => {
             return res.status(404).json({ message: 'No shift details found for this supervisor' });
         }
 
-        // Fetch shift-out details for each shift
+        // Fetch shift-out details based on `fullName` only
         const shiftDetails = await Promise.all(shifts.map(async (shift) => {
-            const shiftOut = await ShiftOut.findOne({ fullName: shift.fullName, shiftTime: shift.shiftTime });
+            const shiftOut = await ShiftOut.findOne({ fullName: shift.fullName });
             return {
-                id: shift.fullName, // Assuming fullName as ID here; adjust if necessary
+                id: shift.fullName,
                 fullName: shift.fullName,
                 machine: shift.machine,
                 shiftIn: shift.shiftTime,
                 shiftOut: shiftOut ? shiftOut.shiftTime : 'N/A',
-                kilos: shiftOut ? shiftOut.kilos : 'N/A'
+                kilos: shiftOut ? shiftOut.kilos : 0 // Ensure kilos is a number
             };
         }));
 
@@ -222,6 +201,7 @@ app.get('/get-employee-details', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 // Route to get supervisor details
 app.get('/supervisor-details', async (req, res) => {
     try {
@@ -231,18 +211,16 @@ app.get('/supervisor-details', async (req, res) => {
             return res.status(400).json({ message: 'Supervisor ID is required' });
         }
 
-        console.log(`Fetching supervisor with ID: ${supervisorId}`); // Debug log
+        console.log(`Fetching supervisor with ID: ${supervisorId}`);
 
         const supervisor = await Supervisor.findOne({ employeeid: supervisorId });
 
         if (supervisor) {
-            console.log('Supervisor found:', supervisor); // Debug log
             res.status(200).json({
                 id: supervisor.employeeid,
                 name: supervisor.username
             });
         } else {
-            console.log('Supervisor not found'); // Debug log
             res.status(404).json({ message: 'Supervisor not found' });
         }
     } catch (err) {
@@ -251,6 +229,34 @@ app.get('/supervisor-details', async (req, res) => {
     }
 });
 
+// Route to get total coal collected by sector
+app.get('/coal-collected-by-sector', async (req, res) => {
+    try {
+        // Remove supervisorId filter
+        console.log(`Fetching total coal collected by sector`);
+
+        // Use aggregation to get total coal collected by sector
+        const coalData = await ShiftOut.aggregate([
+            {
+                $group: {
+                    _id: "$sector", // Group by sector
+                    totalKilos: { $sum: "$kilos" } // Sum kilos for each sector
+                }
+            }
+        ]);
+
+        // Format the response to an easily usable format
+        const sectorCoal = {};
+        coalData.forEach(item => {
+            sectorCoal[item._id] = item.totalKilos; // Create a key-value pair for each sector
+        });
+
+        res.status(200).json(sectorCoal);
+    } catch (err) {
+        console.error('Error fetching coal collected data:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 // Start the server
 app.listen(port, () => {

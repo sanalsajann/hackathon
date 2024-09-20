@@ -56,19 +56,20 @@
         function populateTable(employees) {
             const tableBody = document.querySelector('#example tbody');
             tableBody.innerHTML = ''; // Clear existing rows
-
+        
             employees.forEach(employee => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${employee.fullName}</td>
                     <td>${employee.machine}</td>
                     <td>${employee.shiftIn}</td>
-                    <td>${employee.shiftOut}</td>
-                    <td>${employee.kilos}kg</td>
+                    <td>${employee.shiftOut !== 'N/A' ? employee.shiftOut : 'Not Available'}</td>
+                    <td>${employee.kilos !== 'N/A' ? `${employee.kilos} kg` : 'Not Available'}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
+        
 
         // Call function to fetch and display details when the page loads
         document.addEventListener('DOMContentLoaded', fetchEmployeeDetails);

@@ -30,7 +30,6 @@
                     <h3>Supervisor Details</h3>
                     <p id="supervisor-id">Supervisor ID: Loading...</p>
                     <p id="supervisor-name">Supervisor Name: Loading...</p>
-                    
                 </div>
                 <div class="card green">
                     <h3>Shift Timing</h3>
@@ -39,15 +38,14 @@
                 </div>
             </section>
                
-            <!-- New Section for Total Numbers -->
             <section class="summary-cards">
                 <div class="summary-card">
                     <h3>Total Employees</h3>
-                    <p>150</p>
+                    <p id="total-employees">Loading...</p>
                 </div>
                 <div class="summary-card">
                     <h3>Total Machines</h3>
-                    <p>35</p>
+                    <p>5</p>
                 </div>
                 <div class="summary-card">
                     <h3>Total Sectors</h3>
@@ -55,20 +53,16 @@
                 </div>
             </section>
 
-            <!-- Graph Section -->
             <section class="graph-section">
                 <div class="graph">
-                    <h3>GRAPH1</h3>
-                    <img src="graph1.jpg" alt="Random Graph 1">
-                </div>
-                <div class="graph">
-                    <h3>GRAPH2</h3>
-                    <img src="graph2.jpeg" alt="Random Graph 2">
+                    <h3>Coal Collected by Sector</h3>
+                    <canvas id="coal-graph"></canvas>
                 </div>
             </section>
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Function to get supervisor details
         async function getSupervisorDetails() {
@@ -96,8 +90,76 @@
             }
         }
 
-        // Fetch supervisor details on page load
-        getSupervisorDetails();
+        // Function to get total employees under the supervisor
+        async function getTotalEmployees() {
+            try {
+                const supervisorId = sessionStorage.getItem('supervisorId');
+                const response = await fetch(`/get-employee-details?supervisorId=${supervisorId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('total-employees').innerText = data.length;
+                    return data; // Return employee data for graph generation
+                } else {
+                    document.getElementById('total-employees').innerText = 'Error fetching data';
+                }
+            } catch (error) {
+                console.error('Error fetching total employees:', error);
+                document.getElementById('total-employees').innerText = 'Error';
+            }
+        }
+
+        // Function to generate the graph for coal collected by sector
+        function generateCoalGraph(data) {
+            const ctx = document.getElementById('coal-graph').getContext('2d');
+            const labels = Object.keys(data); // Use the sector names from the response
+            const sectorData = Object.values(data); // Use the total kilos for each sector
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Coal Collected (Kilos)',
+                        data: sectorData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to get total coal collected by sector
+        async function getCoalCollectedBySector() {
+            try {
+                const response = await fetch(`/coal-collected-by-sector`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    generateCoalGraph(data); // Generate the graph with coal collected data
+                } else {
+                    console.error('Error fetching coal collected data:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching coal collected data:', error);
+            }
+        }
+
+        // Initialize fetching functions on page load
+        window.onload = async function() {
+            await getSupervisorDetails();
+            await getTotalEmployees(); // Fetch total employees to get the data
+            await getCoalCollectedBySector(); // Call the correct function to get coal data
+        };
+        
     </script>
 </body>
 </html>
