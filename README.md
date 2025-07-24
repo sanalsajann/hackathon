@@ -1,6 +1,6 @@
 
 
- Coal Mintra is a hybrid web and app-based system built to digitize and streamline attendance, work tracking, and safety for miners. It integrates multiple dashboards for machines, employees, and sectors, along with safety circulars and reporting, offering a complete solution for modern mining site management.
+ Coal Mithra is a hybrid web and app-based system built to digitize and streamline attendance, work tracking, and safety for miners. It integrates multiple dashboards for machines, employees, and sectors, along with safety circulars and reporting, offering a complete solution for modern mining site management.
 
 ---
 
